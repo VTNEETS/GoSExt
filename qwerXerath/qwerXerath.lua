@@ -1,6 +1,6 @@
 require("DamageLib")
-local Enemies = {Count = 0, List = {nil, nil, nil, nil, nil}};
-local XerathVer, Mode = 0.1, "";
+local Enemies = {Count = 0, List = {nil, nil, nil, nil, nil}}
+local XerathVer = 0.1
 local Ignite = myHero:GetSpellData(4).name:lower() == "summonerdot" and HK_SUMMONER_1 or myHero:GetSpellData(5).name:lower() == "summonerdot" and HK_SUMMONER_2 or nil
 local function ManaCheck(value) return value <= myHero.mana / myHero.maxMana * 100 end
 local function GetHP2(unit) return unit.health + unit.shieldAD + unit.shieldAP end
@@ -15,12 +15,8 @@ do
 	table.sort(Enemies, function(a, b) return a.charName < b.charName end)
 end
 
-local function GetOrbMode()
-    if Orbwalker["Combo"].__active then return "Combo" end
-    if Orbwalker["Farm"].__active then return "LaneClear" end
-    if Orbwalker["LastHit"].__active then return "LastHit" end
-    if Orbwalker["Harass"].__active then return "Harass" end
-        return "";
+local function GetOrbMode(mode)
+	return Orbwalker[mode].__active
 end
 
 local function AddMenu(Menu, Tbl, MP)
@@ -423,17 +419,16 @@ Callback.Add("Tick", function()
 	Data[3].range = 2000 + 1200*myHero:GetSpellData(_R).level;
 	UpdateQRange();
 	UpdateR();
-	Mode = GetOrbMode();
 	local QTarget = Ready[0] and Target[0]:GetTarget() or nil;
 	local WTarget = Ready[1] and Target[1]:GetTarget() or nil;
 	local ETarget = Ready[2] and Target[2]:GetTarget() or nil;
-	if Mode == "Combo" then
+	if GetOrbMode("Combo") then
 		if WTarget and qwerXe.W.cb:Value() then CastW(WTarget) end
 		if QTarget and qwerXe.Q.cb:Value() then CastQ(QTarget) end
 		if ETarget and qwerXe.E.cb:Value() then CastE(ETarget) end
 	end
 
-	if Mode == "Harass" then
+	if GetOrbMode("Harass") then
 		if WTarget and qwerXe.W.hr:Value() and ManaCheck(qwerXe.W.MPhr:Value()) then CastW(WTarget) end
 		if QTarget and qwerXe.Q.hr:Value() and (QActive or ManaCheck(qwerXe.Q.MPhr:Value())) then CastQ(QTarget) end
 		if ETarget and qwerXe.E.hr:Value() and ManaCheck(qwerXe.E.MPhr:Value()) then CastE(ETarget) end
