@@ -1,3 +1,15 @@
+--[[ QWER
+	 ___  ___  _______   _______        __  ___________  __    __   
+	|"  \/"  |/"     "| /"      \      /""\("     _   ")/" |  | "\  
+	 \   \  /(: ______)|:        |    /    \)__/  \\__/(:  (__)  :) 
+	  \\  \/  \/    |  |_____/   )   /' /\  \  \\_ /    \/      \/  
+	  /\.  \  // ___)_  //      /   //  __'  \ |.  |    //  __  \\  
+	 /  \   \(:      "||:  __   \  /   /  \\  \\:  |   (:  (  )  :) 
+	|___/\___|\_______)|__|  \___)(___/    \___)\__|    \__|  |__/  
+
+	- 0.01: Released
+---------------------------------------]]
+
 require("DamageLib")
 local Enemies = {Count = 0, List = {nil, nil, nil, nil, nil}}
 local XerathVer = 0.1
@@ -354,8 +366,7 @@ local function CastQ(target)
 		Control.KeyDown(HK_Q);
 	elseif Data[0].range >= target.pos:DistanceTo() then
 		local pos = target:GetPrediction(Data[0].delay, Data[0].speed);
-		Control.SetCursorPos(pos);
-		Control.KeyUp(HK_Q)
+		Control.CastSpell(HK_Q, pos);
 	end
 end
 
