@@ -1,19 +1,30 @@
+--[[ QWER
+	 ___  ___  _______   _______        __  ___________  __    __   
+	|"  \/"  |/"     "| /"      \      /""\("     _   ")/" |  | "\  
+	 \   \  /(: ______)|:        |    /    \)__/  \\__/(:  (__)  :) 
+	  \\  \/  \/    |  |_____/   )   /' /\  \  \\_ /    \/      \/  
+	  /\.  \  // ___)_  //      /   //  __'  \ |.  |    //  __  \\  
+	 /  \   \(:      "||:  __   \  /   /  \\  \\:  |   (:  (  )  :) 
+	|___/\___|\_______)|__|  \___)(___/    \___)\__|    \__|  |__/  
+
+	- 0.01: Released.
+---------------------------------------]]
+
 require("DamageLib")
+Callback.Add("Load", function()
 local Enemies = {Count = 0, List = {nil, nil, nil, nil, nil}};
 local XerathVer, Mode = 0.1, "";
-local Ignite = myHero:GetSpellData(4).name:lower() == "summonerdot" and HK_SUMMONER_1 or myHero:GetSpellData(5).name:lower() == "summonerdot" and HK_SUMMONER_2 or nil
+local Ignite = myHero:GetSpellData(SUMMONER_1).name == "SummonerDot" and HK_SUMMONER_1 or myHero:GetSpellData(5).name == "SummonerDot" and HK_SUMMONER_2 or nil
 local function ManaCheck(value) return value <= myHero.mana / myHero.maxMana * 100 end
 local function GetHP2(unit) return unit.health + unit.shieldAD + unit.shieldAP end
-do
-	for i = 1, Game.HeroCount(), 1 do
-		local enemy = Game.Hero(i);
-		if enemy.team ~= myHero.team then
-			Enemies.Count = Enemies.Count + 1;
-			Enemies.List[Enemies.Count] = enemy;
-		end
+for i = 1, Game.HeroCount(), 1 do
+	local enemy = Game.Hero(i);
+	if enemy.team ~= myHero.team then
+		Enemies.Count = Enemies.Count + 1;
+		Enemies.List[Enemies.Count] = enemy;
 	end
-	table.sort(Enemies, function(a, b) return a.charName < b.charName end)
 end
+table.sort(Enemies, function(a, b) return a.charName < b.charName end)
 
 local function GetOrbMode()
     if Orbwalker["Combo"].__active then return "Combo" end
@@ -276,7 +287,7 @@ local function GetRTarget(range)
 		local enemy = Enemies.List[i];
 		if IsValidTarget(enemy, Data[3].range) and (not range or enemy.pos:DistanceTo(mousePos) <= range) then
 			local temp2 = Damage[3](enemy) / GetHP2(enemy);
-			if not temp or temp2 < temp then
+			if not temp or temp2 > temp then
 				temp = temp2;
 				RTarget = enemy;
 			end
@@ -358,8 +369,7 @@ local function CastQ(target)
 		Control.KeyDown(HK_Q);
 	elseif Data[0].range >= target.pos:DistanceTo() then
 		local pos = target:GetPrediction(Data[0].delay, Data[0].speed);
-		Control.SetCursorPos(pos);
-		Control.KeyUp(HK_Q)
+		Control.CastSpell(HK_Q, pos);
 	end
 end
 
@@ -416,6 +426,7 @@ local function Escape(WTarget, ETarget)
 end
 
 Callback.Add("Tick", function()
+	if myHero.dead then return end
 	Ready[0] = IsReady(0);
 	Ready[1] = IsReady(1);
 	Ready[2] = IsReady(2);
@@ -444,6 +455,7 @@ Callback.Add("Tick", function()
 end)
 
 Callback.Add("Draw", function()
+	if myHero.dead then return end
 	if Ready[0] then
 		local color = qwerXe.Draw.Qcol:Value()
 		if qwerXe.Draw.Qcur:Value() then Draw.Circle(myHero.pos, Data[0].range, 1, color) end
@@ -474,15 +486,4 @@ Callback.Add("Draw", function()
 		end
 	end
 end)
-
-local function qwerXe_Print(text) PrintChat(string.format("<font color=\"#4169E1\"><b>[QWER Xerath]:</b></font><font color=\"#FFFFFF\"> %s</font>", tostring(text))) end
-Callback.Add("Load", function()
-	GetWebResultAsync("https://raw.githubusercontent.com/VTNEETS/GoSExt/master/qwerXerath/qwerXerath.version", function(OnlineVer)
-		if tonumber(OnlineVer) > XerathVer then
-			qwerXe_Print("New Version found (v"..OnlineVer.."). Please wait...")
-			DownloadFileAsync("https://raw.githubusercontent.com/VTNEETS/GoSExt/master/qwerXerath/qwerXerath.lua", SCRIPT_PATH.."qwerXerath.lua", function() qwerXe_Print("Updated to version "..OnlineVer..". Press 2x F6!") end)
-		else
-			PrintChat(string.format("<font color=\"#4169E1\"><b>[QWER Xerath]:</b></font><font color=\"#FFFFFF\"><i> Successfully Loaded</i> (v%s) | Good Luck</font> <font color=\"#C6E2FF\"><u>%s</u></font>", XerathVer, GetUser()))
-		end
-	end)
 end)
