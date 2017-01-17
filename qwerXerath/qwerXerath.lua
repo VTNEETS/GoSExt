@@ -423,17 +423,17 @@ Callback.Add("Tick", function()
 	Data[3].range = 2000 + 1200*myHero:GetSpellData(_R).level;
 	UpdateQRange();
 	UpdateR();
-	mode = GetOrbMode();
+	Mode = GetOrbMode();
 	local QTarget = Ready[0] and Target[0]:GetTarget() or nil;
 	local WTarget = Ready[1] and Target[1]:GetTarget() or nil;
 	local ETarget = Ready[2] and Target[2]:GetTarget() or nil;
-	if mode == "Combo" then
+	if Mode == "Combo" then
 		if WTarget and qwerXe.W.cb:Value() then CastW(WTarget) end
 		if QTarget and qwerXe.Q.cb:Value() then CastQ(QTarget) end
 		if ETarget and qwerXe.E.cb:Value() then CastE(ETarget) end
 	end
 
-	if mode == "Harass" then
+	if Mode == "Harass" then
 		if WTarget and qwerXe.W.hr:Value() and ManaCheck(qwerXe.W.MPhr:Value()) then CastW(WTarget) end
 		if QTarget and qwerXe.Q.hr:Value() and (QActive or ManaCheck(qwerXe.Q.MPhr:Value())) then CastQ(QTarget) end
 		if ETarget and qwerXe.E.hr:Value() and ManaCheck(qwerXe.E.MPhr:Value()) then CastE(ETarget) end
