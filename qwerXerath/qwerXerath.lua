@@ -14,7 +14,7 @@ require("DamageLib")
 Callback.Add("Load", function()
 local Enemies = {Count = 0, List = {nil, nil, nil, nil, nil}};
 local XerathVer, Mode = 0.1, "";
-local Ignite = myHero:GetSpellData(SUMMONER_1).name == "SummonerDot" and HK_SUMMONER_1 or myHero:GetSpellData(5).name == "SummonerDot" and HK_SUMMONER_2 or nil
+local Ignite = myHero:GetSpellData(4).name == "SummonerDot" and HK_SUMMONER_1 or myHero:GetSpellData(5).name == "SummonerDot" and HK_SUMMONER_2 or nil
 local function ManaCheck(value) return value <= myHero.mana / myHero.maxMana * 100 end
 local function GetHP2(unit) return unit.health + unit.shieldAD + unit.shieldAP end
 for i = 1, Game.HeroCount(), 1 do
@@ -473,7 +473,7 @@ Callback.Add("Draw", function()
 		if qwerXe.Draw.drawRmm:Value() then Draw.CircleMinimap(myHero.pos, Data[3].range, 1, color) end
 	end
 	if myHero:GetSpellData(_R).name ~= "XerathLocusOfPower2" and RMode == 3 then
-		Draw.Circle(mousePos, mouseRange, Draw.Color(255, 255, 255, 0))
+		Draw.Circle(mousePos, mouseRange, 1, Draw.Color(255, 255, 255, 0))
 	end
 	if Ready[3] or myHero:GetSpellData(_R).name ~= "XerathLocusOfPower2" then
 		local cnt = 0
