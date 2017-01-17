@@ -474,3 +474,15 @@ Callback.Add("Draw", function()
 		end
 	end
 end)
+
+local function qwerXe_Print(text) PrintChat(string.format("<font color=\"#4169E1\"><b>[QWER Xerath]:</b></font><font color=\"#FFFFFF\"> %s</font>", tostring(text))) end
+Callback.Add("Load", function()
+	GetWebResultAsync("https://raw.githubusercontent.com/VTNEETS/GoSExt/master/qwerXerath/qwerXerath.version", function(OnlineVer)
+		if tonumber(OnlineVer) > XerathVer then
+			qwerXe_Print("New Version found (v"..OnlineVer.."). Please wait...")
+			DownloadFileAsync("https://raw.githubusercontent.com/VTNEETS/GoSExt/master/qwerXerath/qwerXerath.lua", SCRIPT_PATH.."qwerXerath.lua", function() qwerXe_Print("Updated to version "..OnlineVer..". Press 2x F6!") end)
+		else
+			PrintChat(string.format("<font color=\"#4169E1\"><b>[QWER Xerath]:</b></font><font color=\"#FFFFFF\"><i> Successfully Loaded</i> (v%s) | Good Luck</font> <font color=\"#C6E2FF\"><u>%s</u></font>", XerathVer, GetUser()))
+		end
+	end)
+end)
